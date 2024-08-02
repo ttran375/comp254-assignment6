@@ -25,6 +25,26 @@ from map_base import MapBase
 class UnsortedTableMap(MapBase):
     """Map implementation using an unordered list."""
 
+    # ----------------------------- nonpublic behaviors -----------------------------
+    def _find_index(self, k, low, high):
+        """Return index of the leftmost item with key greater than or equal to k.
+
+        Return high + 1 if no such item qualifies.
+
+        That is, j will be returned such that:
+           all items of slice table[low:j] have key < k
+           all items of slice table[j:high+1] have key >= k
+        """
+        if high < low:
+            return high + 1  # no element qualifies
+        mid = (low + high) // 2
+        if k == self._table[mid]._key:
+            return mid  # found exact match
+        if k < self._table[mid]._key:
+            return self._find_index(k, low, mid - 1)  # Note: may return mid
+        return self._find_index(k, mid + 1, high)  # answer is right of mid
+
+    # ----------------------------- public behaviors -----------------------------
     def __init__(self):
         """Create an empty map."""
         self._table = []  # list of _Item's
@@ -61,3 +81,16 @@ class UnsortedTableMap(MapBase):
         """Generate iteration of the map's keys."""
         for item in self._table:
             yield item._key  # yield the KEY
+
+    def containKey(self, k):
+        """Check if key k exists in the map.
+
+        Returns True if key exists, otherwise False.
+        """
+
+        # Find the index where the key k would be located
+        index = self._find_index(k, 0, len(self._table) - 1)
+
+        # Returns True if the key is found within the bounds of the table and matches the key at the
+        # found index
+        return index < len(self._table) and self._table[index]._key == k
