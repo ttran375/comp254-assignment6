@@ -35,14 +35,14 @@ class UnsortedTableMap(MapBase):
            all items of slice table[low:j] have key < k
            all items of slice table[j:high+1] have key >= k
         """
-        if high < low:
-            return high + 1  # no element qualifies
-        mid = (low + high) // 2
-        if k == self._table[mid]._key:
-            return mid  # found exact match
-        if k < self._table[mid]._key:
-            return self._find_index(k, low, mid - 1)  # Note: may return mid
-        return self._find_index(k, mid + 1, high)  # answer is right of mid
+        for i in range(low, high + 1):
+
+            # Check if the current item's key is equal to the search key 'k'
+            if self._table[i]._key == k:
+                return i
+
+        # If no item with key >= k is found, return high + 1
+        return high + 1
 
     # ----------------------------- public behaviors -----------------------------
     def __init__(self):
