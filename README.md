@@ -55,7 +55,7 @@ Write a Java/Python application to test your solution.
 **If your first name starts with a letter from K-Z inclusively:**
 
 Implement the `containKey(k)` method for the `UnSortedTableMap` class.
-**Hint:** Use the existing `findIndex(k)` method.
+**Hint:** Create new `_find_index` method or implement the logic in `containKey`.
 
 Write a Java/Python application to test your solution.
 
