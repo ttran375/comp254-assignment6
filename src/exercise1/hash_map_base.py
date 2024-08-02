@@ -30,7 +30,7 @@ class HashMapBase(MapBase):
     Keys must be hashable and non-None.
     """
 
-    def __init__(self, cap=11, p=109345121):
+    def __init__(self, cap=11, p=109345121, max_load=0.5):
         """Create an empty hash-table map.
 
         cap     initial table size (default 11)
@@ -41,6 +41,7 @@ class HashMapBase(MapBase):
         self._prime = p  # prime for MAD compression
         self._scale = 1 + randrange(p - 1)  # scale from 1 to p-1 for MAD
         self._shift = randrange(p)  # shift from 0 to p-1 for MAD
+        self._max_load = max_load
 
     def _hash_function(self, k):
         return (hash(k) * self._scale + self._shift) % self._prime % len(self._table)
@@ -55,7 +56,7 @@ class HashMapBase(MapBase):
     def __setitem__(self, k, v):
         j = self._hash_function(k)
         self._bucket_setitem(j, k, v)  # subroutine maintains self._n
-        if self._n > len(self._table) // 2:  # keep load factor <= 0.5
+        if self._n > len(self._table) * self._max_load:
             self._resize(2 * len(self._table) - 1)  # number 2^x - 1 is often prime
 
     def __delitem__(self, k):

@@ -160,3 +160,15 @@ class SortedTableMap(MapBase):
         while j < len(self._table) and (stop is None or self._table[j]._key < stop):
             yield (self._table[j]._key, self._table[j]._value)
             j += 1
+
+    def containKey(self, k):
+        """Check if key k exists in the map.
+
+        Returns True if key exists, otherwise False.
+        """
+        # Find the index where the key k would be located
+        j = self._find_index(k, 0, len(self._table) - 1)
+
+        # Returns True if the key is found within the bounds of the table and matches the key at the
+        # found index
+        return j < len(self._table) and self._table[j]._key == k
